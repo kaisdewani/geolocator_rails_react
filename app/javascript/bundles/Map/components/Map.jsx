@@ -1,17 +1,21 @@
 import React, { Component } from 'react';
 import mapboxgl from 'mapbox-gl';
-
+ 
 export default class Map extends React.Component {
   componentDidMount() {
     mapboxgl.accessToken = 'pk.eyJ1IjoiYW5keXdlaXNzMTk4MiIsImEiOiJIeHpkYVBrIn0.3N03oecxx5TaQz7YLg2HqA'
-    this.createMap();
+    let { coordinates } = this.props;
+    const mapOptions = {
+      container: this.mapContainer,
+      style: `mapbox://styles/mapbox/streets-v9`,
+      zoom: 12,
+      center: coordinates
+    }
+    this.createMap(mapOptions);
   }
  
-  createMap = () => {
-    this.map = new mapboxgl.Map({
-      container: this.mapContainer,
-      style: `mapbox://styles/mapbox/streets-v9`
-    });
+  createMap = mapOptions => {
+    this.map = new mapboxgl.Map(mapOptions);
     const map = this.map;
     map.on('load', (event) => {
       map.addSource(
@@ -23,7 +27,6 @@ export default class Map extends React.Component {
       );
       map.addLayer({ id: 'places', type: 'circle', source: 'places'});
     });
-    
   }
  
   render() {
