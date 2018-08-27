@@ -4,7 +4,7 @@ import mapboxgl from 'mapbox-gl';
 export default class Map extends React.Component {
   componentDidMount() {
     mapboxgl.accessToken = 'pk.eyJ1IjoiYW5keXdlaXNzMTk4MiIsImEiOiJIeHpkYVBrIn0.3N03oecxx5TaQz7YLg2HqA'
-    let { coordinates } = this.props;
+    let { coordinates, centerOnUser } = this.props;
     const mapOptions = {
       container: this.mapContainer,
       style: `mapbox://styles/mapbox/streets-v9`,
@@ -16,7 +16,7 @@ export default class Map extends React.Component {
       maximumAge        : 30000,
       timeout           : 27000
     };
-    if ("geolocation" in navigator) {
+    if ("geolocation" in navigator && centerOnUser) {
       navigator.geolocation.getCurrentPosition(
         // success callback
         (position) => {
@@ -36,6 +36,8 @@ export default class Map extends React.Component {
         // options
         geolocationOptions
       );
+    }else{
+      this.createMap(mapOptions, geolocationOptions);
     }
   }
  
